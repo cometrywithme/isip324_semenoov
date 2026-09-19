@@ -44,7 +44,7 @@ class Program
             Console.WriteLine("1. Вывод данных");
             Console.WriteLine("2. Статистика");
             Console.WriteLine("3. Сортировка по цене");
-            Console.WriteLine("4. Конвертация валюты");
+            Console.WriteLine("4. Конвертация валют");
             Console.WriteLine("5. Поиск по названию");
             Console.WriteLine("0. Выход");
 
