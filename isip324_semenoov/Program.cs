@@ -1,39 +1,88 @@
 ﻿using System;
+using System.Collections.Generic;
+
+enum Category
+{
+    Products,
+    Electronics,
+    Clothing
+}
+
+class Product
+{
+    public int Code;
+    public string Name;
+    public double Price;
+    public int Quantity;
+    public Category Category;
+}
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Учет расходов");
-        Console.WriteLine("Введите количество расходов от 2 до 40:");
-        int count = Convert.ToInt32(Console.ReadLine());
+        List<Product> products = new List<Product>();
+        int nextCode = 1;
 
-        while (count < 2 || count > 40)
+        Product product1 = new Product
         {
-            Console.WriteLine("Неверное количество, введите от 2 до 40!");
-            count = Convert.ToInt32(Console.ReadLine());
-        }
+            Code = nextCode,
+            Name = "Хлеб",
+            Price = 65,
+            Quantity = 10,
+            Category = Category.Products
+        };
 
-        string[] names = new string[count];
-        double[] price = new double[count];
+        products.Add(product1);
+        nextCode++;
 
-        for (int i = 0; i < count; i++)
+        Product product2 = new Product
         {
-            Console.WriteLine("Операция " + (i + 1));
+            Code = nextCode,
+            Name = "Наушники",
+            Price = 2500,
+            Quantity = 5,
+            Category = Category.Electronics
+        };
 
-            string line = Console.ReadLine();
-            string[] parts = line.Split(';');
+        products.Add(product2);
+        nextCode++;
 
-            names[i] = parts[0].Trim();
-            price[i] = Convert.ToDouble(parts[1].Trim());
-        }
-
-        Console.WriteLine("Список расходов:");
-
-        for (int i = 0; i < count; i++)
+        Product product3 = new Product
         {
-            Console.WriteLine(names[i] + " - " + price[i] + " rub");
-        }
+            Code = nextCode,
+            Name = "Футболка",
+            Price = 1500,
+            Quantity = 7,
+            Category = Category.Clothing
+        };
+
+        products.Add(product3);
+        nextCode++;
+
+        Product product4 = new Product
+        {
+            Code = nextCode,
+            Name = "Молоко",
+            Price = 90,
+            Quantity = 0,
+            Category = Category.Products
+        };
+
+        products.Add(product4);
+        nextCode++;
+
+        Product product5 = new Product
+        {
+            Code = nextCode,
+            Name = "Клавиатура",
+            Price = 3200,
+            Quantity = 3,
+            Category = Category.Electronics
+        };
+
+        products.Add(product5);
+        nextCode++;
 
         int choice = -1;
 
@@ -41,87 +90,131 @@ class Program
         {
             Console.WriteLine();
             Console.WriteLine("Меню:");
-            Console.WriteLine("1. Вывод данных");
-            Console.WriteLine("2. Статистика");
-            Console.WriteLine("3. Сортировка по цене");
-            Console.WriteLine("4. Конвертация валют");
-            Console.WriteLine("5. Поиск по названию");
+            Console.WriteLine("1. Показать товары");
+            Console.WriteLine("2. Добавить товар");
+            Console.WriteLine("3. Удалить товар");
+            Console.WriteLine("4. Заказать поставку");
+            Console.WriteLine("5. Продать товар");
+            Console.WriteLine("6. Поиск товаров");
             Console.WriteLine("0. Выход");
 
-            Console.Write("Выберите пункт: ");
+            Console.Write("Выберите команду: ");
 
-            choice = Convert.ToInt32(Console.ReadLine());
+            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 0 || choice > 6)
+            {
+                Console.Write("Неверная команда, введите число от 0 до 6: ");
+            }
 
             switch (choice)
             {
                 case 1:
+                    Console.WriteLine("Список товаров:");
+
+                    for (int i = 0; i < products.Count; i++)
                     {
-                        Console.WriteLine("Список расходов:");
-
-                        for (int i = 0; i < count; i++)
-                        {
-                            Console.WriteLine((i + 1) + ". " + names[i] + " - " + price[i] + " rub");
-                        }
-
-                        break;
+                        Console.WriteLine(products[i].Code + ". " + products[i].Name + " - " + products[i].Price + " руб.");
                     }
+
+                    break;
 
                 case 2:
                     {
-                        double sum = 0;
-                        double max = price[0];
-                        double min = price[0];
+                        Console.Write("Введите название товара: ");
+                        string name = Console.ReadLine();
 
-                        for (int i = 0; i < count; i++)
+                        while (name == null || name.Trim() == "")
                         {
-                            sum = sum + price[i];
-
-                            if (price[i] > max)
-                            {
-                                max = price[i];
-                            }
-
-                            if (price[i] < min)
-                            {
-                                min = price[i];
-                            }
+                            Console.Write("Название не может быть пустым. Введите название: ");
+                            name = Console.ReadLine();
                         }
 
-                        double average = sum / count;
+                        Console.Write("Введите цену: ");
+                        double price;
 
-                        Console.WriteLine("Статистика:");
-                        Console.WriteLine("Сумма: " + sum + " rub");
-                        Console.WriteLine("Максимальное: " + max + " rub");
-                        Console.WriteLine("Минимальное: " + min + " rub");
-                        Console.WriteLine("Среднее: " + average + " rub");
+                        while (!double.TryParse(Console.ReadLine(), out price) || price < 0)
+                        {
+                            Console.Write("Неверная цена. Введите цену еще раз: ");
+                        }
+
+                        Console.Write("Введите количество: ");
+                        int quantity;
+
+                        while (!int.TryParse(Console.ReadLine(), out quantity) || quantity < 0)
+                        {
+                            Console.Write("Неверное количество. Введите количество еще раз: ");
+                        }
+
+                        Console.WriteLine("Выберите категорию:");
+                        Console.WriteLine("1. Products");
+                        Console.WriteLine("2. Electronics");
+                        Console.WriteLine("3. Clothing");
+
+                        int categoryChoice;
+
+                        while (!int.TryParse(Console.ReadLine(), out categoryChoice) ||
+                            categoryChoice < 1 || categoryChoice > 3)
+                        {
+                            Console.Write("Неверная категория. Введите число от 1 до 3: ");
+                        }
+
+                        Category category;
+
+                        if (categoryChoice == 1)
+                        {
+                            category = Category.Products;
+                        }
+                        else if (categoryChoice == 2)
+                        {
+                            category = Category.Electronics;
+                        }
+                        else
+                        {
+                            category = Category.Clothing;
+                        }
+
+                        Product product = new Product
+                        {
+                            Code = nextCode,
+                            Name = name,
+                            Price = price,
+                            Quantity = quantity,
+                            Category = category
+                        };
+
+                        products.Add(product);
+                        nextCode++;
+
+                        Console.WriteLine("Товар добавлен!");
 
                         break;
                     }
 
                 case 3:
                     {
-                        for (int i = 0; i < count - 1; i++)
-                        {
-                            for (int j = 0; j < count - 1 - i; j++)
-                            {
-                                if (price[j] > price[j + 1])
-                                {
-                                    double tempPrice = price[j];
-                                    price[j] = price[j + 1];
-                                    price[j + 1] = tempPrice;
+                        Console.Write("Введите код товара для удаления: ");
+                        int code;
 
-                                    string tempName = names[j];
-                                    names[j] = names[j + 1];
-                                    names[j + 1] = tempName;
-                                }
+                        while (!int.TryParse(Console.ReadLine(), out code) || code <= 0)
+                        {
+                            Console.Write("Неверный код. Введите код еще раз: ");
+                        }
+
+                        bool found = false;
+
+                        for (int i = 0; i < products.Count; i++)
+                        {
+                            if (products[i].Code == code)
+                            {
+                                products.RemoveAt(i);
+                                found = true;
+                                Console.WriteLine("Товар удален.");
+                                break;
                             }
                         }
 
-                        Console.WriteLine("Сортировка выполнена!");
-
-                        for (int i = 0; i < count; i++)
+                        if (!found)
                         {
-                            Console.WriteLine((i + 1) + ". " + names[i] + " - " + price[i] + " rub");
+                            Console.WriteLine("Товар с таким кодом не найден.");
                         }
 
                         break;
@@ -129,14 +222,41 @@ class Program
 
                 case 4:
                     {
-                        Console.Write("Введите курс рубля к доллару: ");
-                        double rate = Convert.ToDouble(Console.ReadLine());
+                        Console.Write("Введите код товара: ");
+                        int code;
 
-                        Console.WriteLine("Расходы в долларах:");
-
-                        for (int i = 0; i < count; i++)
+                        while (!int.TryParse(Console.ReadLine(), out code) || code <= 0)
                         {
-                            Console.WriteLine(names[i] + " - " + (price[i] / rate) + " USD");
+                            Console.Write("Неверный код. Введите код еще раз: ");
+                        }
+
+                        bool found = false;
+
+                        for (int i = 0; i < products.Count; i++)
+                        {
+                            if (products[i].Code == code)
+                            {
+                                Console.Write("Введите количество товара: ");
+                                int quantity;
+
+                                while (!int.TryParse(Console.ReadLine(), out quantity) || quantity <= 0)
+                                {
+                                    Console.Write("Неверное количество. Введите количество еще раз: ");
+                                }
+
+                                products[i].Quantity = products[i].Quantity + quantity;
+
+                                Console.WriteLine("Поставка выполнена.");
+                                Console.WriteLine("Новое количество: " + products[i].Quantity);
+
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found)
+                        {
+                            Console.WriteLine("Товар с таким кодом не найден.");
                         }
 
                         break;
@@ -144,23 +264,205 @@ class Program
 
                 case 5:
                     {
-                        Console.Write("Введите название для поиска: ");
-                        string search = Console.ReadLine();
+                        Console.Write("Введите код товара: ");
+                        int code;
+
+                        while (!int.TryParse(Console.ReadLine(), out code) || code <= 0)
+                        {
+                            Console.Write("Неверный код. Введите код еще раз: ");
+                        }
 
                         bool found = false;
 
-                        for (int i = 0; i < count; i++)
+                        for (int i = 0; i < products.Count; i++)
                         {
-                            if (names[i].ToLower().Contains(search.ToLower()))
+                            if (products[i].Code == code)
                             {
-                                Console.WriteLine(names[i] + " - " + price[i] + " rub");
+                                Console.WriteLine("Товар: " + products[i].Name);
+                                Console.WriteLine("Остаток на складе: " + products[i].Quantity);
+
+                                Console.Write("Введите количество для продажи: ");
+                                int quantity;
+
+                                while (!int.TryParse(Console.ReadLine(), out quantity) || quantity <= 0)
+                                {
+                                    Console.Write("Неверное количество. Введите количество еще раз: ");
+                                }
+
+                                if (quantity <= products[i].Quantity)
+                                {
+                                    products[i].Quantity = products[i].Quantity - quantity;
+
+                                    Console.WriteLine("Продажа выполнена.");
+                                    Console.WriteLine("Осталось на складе: " + products[i].Quantity);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Нельзя продать больше товара, чем есть на складе.");
+                                }
+
                                 found = true;
+                                break;
                             }
                         }
 
                         if (!found)
                         {
-                            Console.WriteLine("Расход не найден.");
+                            Console.WriteLine("Товар с таким кодом не найден.");
+                        }
+
+                        break;
+                    }
+
+                case 6:
+                    {
+                        Console.WriteLine("Поиск товаров");
+                        Console.WriteLine("1. Поиск по коду");
+                        Console.WriteLine("2. Поиск по названию");
+                        Console.WriteLine("3. Поиск по категории");
+
+                        Console.Write("Выберите способ поиска: ");
+                        int searchChoice;
+
+                        while (!int.TryParse(Console.ReadLine(), out searchChoice) ||
+                            searchChoice < 1 || searchChoice > 3)
+                        {
+                            Console.Write("Неверный выбор. Введите число от 1 до 3: ");
+                        }
+
+                        bool found = false;
+
+                        if (searchChoice == 1)
+                        {
+                            Console.Write("Введите код товара: ");
+                            int code;
+
+                            while (!int.TryParse(Console.ReadLine(), out code) || code <= 0)
+                            {
+                                Console.Write("Неверный код. Введите код еще раз: ");
+                            }
+
+                            for (int i = 0; i < products.Count; i++)
+                            {
+                                if (products[i].Code == code)
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine("Код: " + products[i].Code);
+                                    Console.WriteLine("Название: " + products[i].Name);
+                                    Console.WriteLine("Цена: " + products[i].Price + " руб.");
+                                    Console.WriteLine("Количество: " + products[i].Quantity);
+
+                                    if (products[i].Quantity > 0)
+                                    {
+                                        Console.WriteLine("На складе: Да");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("На складе: Нет");
+                                    }
+
+                                    Console.WriteLine("Категория: " + products[i].Category);
+
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                        else if (searchChoice == 2)
+                        {
+                            Console.Write("Введите название товара: ");
+                            string search = Console.ReadLine();
+
+                            while (search == null || search.Trim() == "")
+                            {
+                                Console.Write("Название не может быть пустым. Введите название: ");
+                                search = Console.ReadLine();
+                            }
+
+                            for (int i = 0; i < products.Count; i++)
+                            {
+                                if (products[i].Name.ToLower().Contains(search.ToLower()))
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine("Код: " + products[i].Code);
+                                    Console.WriteLine("Название: " + products[i].Name);
+                                    Console.WriteLine("Цена: " + products[i].Price + " руб.");
+                                    Console.WriteLine("Количество: " + products[i].Quantity);
+
+                                    if (products[i].Quantity > 0)
+                                    {
+                                        Console.WriteLine("На складе: Да");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("На складе: Нет");
+                                    }
+
+                                    Console.WriteLine("Категория: " + products[i].Category);
+
+                                    found = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Выберите категорию:");
+                            Console.WriteLine("1. Products");
+                            Console.WriteLine("2. Electronics");
+                            Console.WriteLine("3. Clothing");
+
+                            int categoryChoice;
+
+                            while (!int.TryParse(Console.ReadLine(), out categoryChoice) ||
+                                categoryChoice < 1 || categoryChoice > 3)
+                            {
+                                Console.Write("Неверная категория. Введите число от 1 до 3: ");
+                            }
+
+                            Category selectedCategory;
+
+                            if (categoryChoice == 1)
+                            {
+                                selectedCategory = Category.Products;
+                            }
+                            else if (categoryChoice == 2)
+                            {
+                                selectedCategory = Category.Electronics;
+                            }
+                            else
+                            {
+                                selectedCategory = Category.Clothing;
+                            }
+
+                            for (int i = 0; i < products.Count; i++)
+                            {
+                                if (products[i].Category == selectedCategory)
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine("Код: " + products[i].Code);
+                                    Console.WriteLine("Название: " + products[i].Name);
+                                    Console.WriteLine("Цена: " + products[i].Price + " руб.");
+                                    Console.WriteLine("Количество: " + products[i].Quantity);
+
+                                    if (products[i].Quantity > 0)
+                                    {
+                                        Console.WriteLine("На складе: Да");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("На складе: Нет");
+                                    }
+
+                                    Console.WriteLine("Категория: " + products[i].Category);
+
+                                    found = true;
+                                }
+                            }
+                        }
+
+                        if (!found)
+                        {
+                            Console.WriteLine("Товар не найден.");
                         }
 
                         break;
@@ -168,10 +470,6 @@ class Program
 
                 case 0:
                     Console.WriteLine("Выход");
-                    break;
-
-                default:
-                    Console.WriteLine("Такого пункта нет");
                     break;
             }
         }
