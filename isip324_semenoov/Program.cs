@@ -416,7 +416,7 @@ class Program
                             while (!int.TryParse(Console.ReadLine(), out categoryChoice) ||
                                 categoryChoice < 1 || categoryChoice > 3)
                             {
-                                Console.Write("Неверная категория. Введите число от 1 до 3: ");
+                                Console.Write("Неверная категория. Ведите число от 1 до 3: ");
                             }
 
                             Category selectedCategory;
